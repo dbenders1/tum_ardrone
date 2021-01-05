@@ -68,6 +68,21 @@ catkin_package(CATKIN_DEPENDS message_runtime std_msgs ardrone_autonomy)
 ###########
 include_directories(${catkin_INCLUDE_DIRS})
 
+# ------------------------- state feedback -----------------------------------------
+# set header ans source files
+set(FEEDBACK_SOURCE_FILES         
+	src/statefeedback/main_statefeedback.cpp
+	src/statefeedback/FeedbackNode.cpp
+)
+set(FEEDBACK_HEADER_FILES        
+	src/statefeedback/FeedbackNode.h
+)
+
+# build!
+add_executable(drone_statefeedback ${FEEDBACK_SOURCE_FILES} ${FEEDBACK_HEADER_FILES})
+target_link_libraries(drone_statefeedback ${catkin_LIBRARIES})
+add_dependencies(drone_statefeedback thirdparty ${PROJECT_NAME}_gencpp ${PROJECT_NAME}_gencfg)
+
 # --------------------------- stateestimation & PTAM --------------------------------
 # set header ans source files
 set(STATEESTIMATION_SOURCE_FILES       

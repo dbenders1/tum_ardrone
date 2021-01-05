@@ -104,17 +104,18 @@ void RosThread::joyCb(const sensor_msgs::JoyConstPtr joy_msg)
     }
 
     // Avoid crashes if non-ps3 joystick is being used
-    short unsigned int actiavte_index = (joy_msg->buttons.size() > 11) ? 11 : 1;
+    short unsigned int activate_index = (joy_msg->buttons.size() > 11) ? 11 : 5;
 
 	// if not controlling: start controlling if sth. is pressed (!)
     bool justStartedControlling = false;
 	if(gui->currentControlSource != CONTROL_JOY)
 	{
-		if(		joy_msg->axes[0] > 0.1 ||  joy_msg->axes[0] < -0.1 ||
+		if(	joy_msg->axes[0] > 0.1 ||  joy_msg->axes[0] < -0.1 ||
 				joy_msg->axes[1] > 0.1 ||  joy_msg->axes[1] < -0.1 ||
 				joy_msg->axes[2] > 0.1 ||  joy_msg->axes[2] < -0.1 ||
 				joy_msg->axes[3] > 0.1 ||  joy_msg->axes[3] < -0.1 ||
-                joy_msg->buttons.at(actiavte_index))
+        joy_msg->buttons.at(activate_index - 1) ||
+        joy_msg->buttons.at(activate_index))
 		{
 			gui->setControlSource(CONTROL_JOY);
 			justStartedControlling = true;
@@ -125,25 +126,25 @@ void RosThread::joyCb(const sensor_msgs::JoyConstPtr joy_msg)
 	if(justStartedControlling || gui->currentControlSource == CONTROL_JOY)
 	{
 		ControlCommand c;
-		c.yaw = -joy_msg->axes[2];
-		c.gaz = joy_msg->axes[3];
+		c.yaw = -joy_msg->axes[3];
+		c.gaz = joy_msg->axes[4];
 		c.roll = -joy_msg->axes[0];
 		c.pitch = -joy_msg->axes[1];
 
 		sendControlToDrone(c);
 		lastJoyControlSent = c;
 
-        if(!lastL1Pressed && joy_msg->buttons.at(actiavte_index - 1))
+        if(!lastL1Pressed && joy_msg->buttons.at(activate_index - 1))
 			sendTakeoff();
-        if(lastL1Pressed && !joy_msg->buttons.at(actiavte_index - 1))
+        if(lastL1Pressed && !joy_msg->buttons.at(activate_index - 1))
 			sendLand();
 
-        if(!lastR1Pressed && joy_msg->buttons.at(actiavte_index))
+        if(!lastR1Pressed && joy_msg->buttons.at(activate_index))
 			sendToggleState();
 
 	}
-    lastL1Pressed =joy_msg->buttons.at(actiavte_index - 1);
-    lastR1Pressed = joy_msg->buttons.at(actiavte_index);
+    lastL1Pressed =joy_msg->buttons.at(activate_index - 1);
+    lastR1Pressed = joy_msg->buttons.at(activate_index);
 }
 
 

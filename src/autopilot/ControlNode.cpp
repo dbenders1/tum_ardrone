@@ -47,7 +47,7 @@ pthread_mutex_t ControlNode::logControl_CS = PTHREAD_MUTEX_INITIALIZER;
 ControlNode::ControlNode()
 {
     control_channel = nh_.resolveName("cmd_vel");
-    dronepose_channel = nh_.resolveName("ardrone/predictedPose");
+    dronepose_channel = nh_.resolveName("ardrone2_dem/state");
     command_channel = nh_.resolveName("tum_ardrone/com");
     takeoff_channel = nh_.resolveName("ardrone/takeoff");
     land_channel = nh_.resolveName("ardrone/land");
@@ -413,10 +413,10 @@ void ControlNode::toogleLogging()
 void ControlNode::sendControlToDrone(ControlCommand cmd)
 {
 	geometry_msgs::Twist cmdT;
-	cmdT.angular.z = -cmd.yaw;
+	cmdT.angular.z = cmd.yaw;
 	cmdT.linear.z = cmd.gaz;
-	cmdT.linear.x = -cmd.pitch;
-	cmdT.linear.y = -cmd.roll;
+	cmdT.linear.x = cmd.roll;
+	cmdT.linear.y = cmd.pitch;
 
 	// assume that while actively controlling, the above for will never be equal to zero, so i will never hover.
 	cmdT.angular.x = cmdT.angular.y = 0;
