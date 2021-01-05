@@ -69,10 +69,10 @@ void FeedbackNode::optitrackCb(const geometry_msgs::PoseStamped::ConstPtr& msg)
     ardrone_pose = optitrack_model_state.pose;
 
     // convert quaternion into Euler angles
-    tf::Quaternion quat;
-    tf::quaternionMsgToTF(ardrone_pose.orientation, quat);
-    //tf::Matrix3x3(quat).getRPY(roll, pitch, yaw);
-    ardrone_twist.linear = tf::Matrix3x3(quat)*;
+//    tf::Quaternion quat;
+//    tf::quaternionMsgToTF(ardrone_pose.orientation, quat);
+//    tf::Matrix3x3(quat).getRPY(roll, pitch, yaw);
+//    ardrone_twist.linear = tf::Matrix3x3(quat)*;
 }
 
 void FeedbackNode::Loop()
